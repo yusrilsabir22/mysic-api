@@ -1,0 +1,11 @@
+.history
+*.mp3
+*.log
+*.html
+test*
+
+node_modules
+node_modules/*
+/node_modules/
+error
+/error/*
