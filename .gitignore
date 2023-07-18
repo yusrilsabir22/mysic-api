@@ -2,8 +2,8 @@
 *.mp3
 *.log
 *.html
-test*
 
+coverage
 node_modules
 node_modules/*
 /node_modules/

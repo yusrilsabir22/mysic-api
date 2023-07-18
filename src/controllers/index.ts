@@ -3,40 +3,110 @@ import { Extractor } from "../extractor";
 import { fetchBrowseAPI, fetchSearchAPI } from "../utils/utils";
 import { Cache } from "../config/cache";
 import { INNERTUBE_API_KEY, INNERTUBE_CONTEXT, VISITOR_DATA, YTMUSIC_INITIAL_DATA } from "../types/api";
+import ytdl from "ytdl-core";
 
 
 
 export const BrowseControllersV2 = (cache: Cache) => async (req: Request, res: Response) => {
+    // #swagger.tags = ['Browse']
+    // #swagger.description = "Note: query next & ct can't be provided at the same request"
+
+    /* 
+        #swagger.parameters['next'] = {
+            in: 'query',
+                description: 'will redirect to playlist',
+                type: 'string'
+        }
+        
+        #swagger.parameters['ct'] = {
+            in: 'query',
+                description: 'will continue the playlist',
+                type: 'string'
+        }
+    */
+
     const data = await fetchBrowseAPI(cache, req.query)
     const result: any = await data.json();
     try {
         const ext = new Extractor(result)
         if (!!req.query.next && !req.query.ct) {
+            /* #swagger.responses[200] = { 
+               schema: { $ref: "#/definitions/BrowseNextResult" },
+               description: '' 
+            } */
+
             res.json(ext.getNextData())
         } else {
+            /* #swagger.responses[200] = { 
+               schema: { $ref: "#/definitions/BrowseContinuationResult" },
+               description: '' 
+            } */
             res.json(ext.getContinuationData())
         }
     } catch (error) {
         console.log(error)
+
+        /* #swagger.responses[400] = { 
+            schema: { $ref: "#/definitions/ErrorResult" },
+            description: '' 
+        } */
         res.json({ error: '' + error, msg: 'something went wrong' })
     }
 }
 
 
 export const HomeControllersV2 = (cache: Cache) => async (req: Request, res: Response) => {
+    // #swagger.tags = ['Home']
+    // #swagger.description = 'To fetch more content home, you should take HomeResult.continuation to Browse endpoint as ct query'
+
+    /* 
+        
+    */
+
     const initialData = cache.get(YTMUSIC_INITIAL_DATA)
 
     try {
         const ext = new Extractor(initialData)
+
+        /* #swagger.responses[200] = { 
+            schema: { $ref: "#/definitions/HomeResult" },
+            description: '' 
+        } */
         res.json(ext.getSuggestionData())
 
     } catch (error) {
+        /* #swagger.responses[400] = { 
+            schema: { $ref: "#/definitions/ErrorResult" },
+            description: '' 
+        } */
         res.json({ error: error + "", msg: 'something went wrong' })
     }
 }
 
 
 export const SearchControllersV2 = (cache: Cache) => async (req: Request, res: Response) => {
+    // #swagger.tags = ['Search']
+    // #swagger.description = "Note: Query 'q' should be provided for every search request"
+
+    /*  #swagger.parameters['q'] = {
+            in: 'query',
+                description: 'song or band name',
+                type: 'string'
+        }
+
+        #swagger.parameters['next'] = {
+            in: 'query',
+                description: 'will redirect to playlist',
+                type: 'string'
+        }
+        
+        #swagger.parameters['ct'] = {
+            in: 'query',
+                description: 'will continue fetch search',
+                type: 'string'
+        }
+    */
+
     const data = await fetchSearchAPI(cache, req.query)
     const result = await data.json()
     if ((!!req.query.next && !!req.query.ct) || !req.query.q) {
@@ -48,22 +118,57 @@ export const SearchControllersV2 = (cache: Cache) => async (req: Request, res: R
         let results;
 
         if (!!req.query.next) {
+
+        /* #swagger.responses[200] = { 
+            schema: { $ref: "#/definitions/SearchNextResult" },
+            description: '' 
+        } */
             results = ext.getNextSearch()
         } else if (!!req.query.ct) {
+
+            /* #swagger.responses[200] = { 
+            schema: { $ref: "#/definitions/SearchContinuationResult" },
+            description: '' 
+        } */
             results = ext.getContinuationSearch()
         } else {
+
+            /* #swagger.responses[200] = { 
+                schema: { $ref: "#/definitions/SearchDefaultResult" },
+                description: '' 
+            } */
             results = ext.getDefaultSearch()
         }
         res.json(results);
     } catch (error) {
         console.log(error)
+
+        /* #swagger.responses[400] = { 
+            schema: { $ref: "#/definitions/ErrorResult" },
+            description: '' 
+        } */
         res.json({ error, msg: 'something went wrong' })
     }
 }
 
 
 export const ExplorerController = (cache: Cache) => async (req: Request, res: Response) => {
-    const initialData = cache.get(YTMUSIC_INITIAL_DATA)
+
+    // #swagger.tags = ['Explorer']
+    // #swagger.description = ''
+
+    /*  #swagger.parameters['params'] = {
+            in: 'query',
+                description: 'will redirect to detail playlist',
+                type: 'string'
+        }
+
+        #swagger.parameters['next'] = {
+            in: 'query',
+                description: 'will redirect to playlist',
+                type: 'string'
+        }
+    */
 
     const { ct, next, params, lazy } = req.query
 
@@ -130,23 +235,79 @@ export const ExplorerController = (cache: Cache) => async (req: Request, res: Re
         }
     );
 
-
-    // res.json(result)
     try {
         const result: any = await data.json();
         const browseExtractor = new Extractor(result)
         if (!!next && !!params) {
+
+            /* #swagger.responses[200] = { 
+                schema: { $ref: "#/definitions/ExplorerNextParamResult" },
+                description: '' 
+            } */
             res.json({ data: browseExtractor.getNextParamsExplorer() })
             return
         } else if (!!next && !params) {
+
+            /* #swagger.responses[200] = { 
+                schema: { $ref: "#/definitions/ExplorerNextResult" },
+                description: '' 
+            } */
             res.json(browseExtractor.getNextExplorer())
             return
         }
+
+        /* #swagger.responses[200] = { 
+            schema: { $ref: "#/definitions/ExplorerDefaultResult" },
+            description: '' 
+        } */
         res.json({ data: browseExtractor.getDefaultExplorer() })
 
     } catch (error) {
         console.log(error)
-        console.log(data.status)
+
+        /* #swagger.responses[400] = { 
+            schema: { $ref: "#/definitions/ErrorResult" },
+            description: '' 
+        } */
         res.json({ error: '' + error, msg: 'something went wrong' })
     }
+}
+
+export const PlayController = async (req: Request, res: Response) => {
+    // #swagger.tags = ['Play']
+    // #swagger.description = ''
+
+    /*  #swagger.parameters['id'] = {
+            in: 'query',
+                description: 'videoId',
+                type: 'string',
+                required: true
+        }
+    */
+
+    if (!req.query.id) {
+        /* #swagger.responses[422] = { 
+            schema: { $ref: "#/definitions/Error422Result" },
+            description: '' 
+        } */
+        res.status(422).json({ 'error': 'params required' })
+        return
+    }
+    try {
+        
+        const info = await ytdl.getInfo(req.query.id as string)
+        const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' })
+        /* #swagger.responses[200] = { 
+            schema: { $ref: "#/definitions/PlayResult" },
+            description: '' 
+        } */
+        res.json(audioFormat)
+    } catch(error) {
+        /* #swagger.responses[400] = { 
+            schema: { $ref: "#/definitions/ErrorResult" },
+            description: '' 
+        } */
+        res.json({ error: '' + error, msg: 'something went wrong' })
+    }
+    
 }
