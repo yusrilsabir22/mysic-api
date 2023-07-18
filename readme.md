@@ -1,3 +1,7 @@
 ## Require
 - node js v18.16.0
-- ffmpeg
+
+### How to run
+
+- `yarn dev`
+- It will run on port `3000`
