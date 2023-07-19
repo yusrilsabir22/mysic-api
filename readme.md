@@ -12,7 +12,7 @@
 `yarn unit:test`
 
 
-### Project
+### Project Reference
 
 [Mysic API](https://github.com/yusrilsabir22/mysic-api)
 
