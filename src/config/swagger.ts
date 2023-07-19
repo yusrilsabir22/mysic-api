@@ -1,7 +1,7 @@
 import swaggerAutogen from "swagger-autogen"
 import path from "path"
 
-const outputFile = path.join(__dirname, "..", "swagger_output.json")
+const outputFile = path.join(__dirname, "..", "..", "docs", "swagger_output.json")
 const endpointsFiles = [path.join(__dirname, "..", "index.ts")]
 
 const doc = {

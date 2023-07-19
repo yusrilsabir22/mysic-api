@@ -2,6 +2,7 @@
 *.mp3
 *.log
 *.html
+*.env
 
 coverage
 node_modules
@@ -9,3 +10,4 @@ node_modules/*
 /node_modules/
 error
 /error/*
+/docker/.data

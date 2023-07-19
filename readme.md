@@ -11,6 +11,18 @@
 ### Run Unit Test
 `yarn unit:test`
 
+### DB Migration
+Available commands:
+- `show-migration`
+- `up-migration`
+- `gen-migration`
+
+`gen-migration` required `args` as migration name
+example:
+```
+./manage gen-migration migration-name
+```
+
 
 ### Project Reference
 

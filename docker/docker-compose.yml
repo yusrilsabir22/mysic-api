@@ -13,10 +13,6 @@ services:
     volumes:
       - ./.data/postgresql:/var/lib/postgresql/data/pgdata
       - ./:/docker-entrypoint-initdb.d/
-  redis:
-    image: redis:5-alpine
-    ports:
-      - "6379:6379"
   localstack:
     image: localstack/localstack
     ports:

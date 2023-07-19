@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+yarn typeorm migration:show  -- -d src/config/db.ts

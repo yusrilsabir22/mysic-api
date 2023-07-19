@@ -5,6 +5,7 @@ import { Cache } from './config/cache'
 import initConfig from "./config/init";
 import defaultRouter from "./routes"
 import swaggerUi from 'swagger-ui-express'
+import AppDataSource from './config/db';
 
 
 export class Server {
@@ -19,16 +20,18 @@ export class Server {
         this._debug = debug
     }
 
-    private async init() {
-        const cache = new Cache()
-        this._cache = cache
-        await initConfig(cache, false)
-        this.configureMiddleware()
+    private init() {
+        AppDataSource.initialize().then(async () => {
+            const cache = new Cache()
+            this._cache = cache
+            await initConfig(cache, false)
+            this.configureMiddleware()
 
-        this._app.use("/api/v1", defaultRouter(cache))
+            this._app.use("/api/v1", defaultRouter(cache))
 
-        const swaggerFile = require("./swagger_output.json")
-        this._app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+            const swaggerFile = require("../docs/swagger_output.json")
+            this._app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+        })
     }
 
     get app(): express.Express {
@@ -55,7 +58,7 @@ export class Server {
     }
 
     public async start() {
-        await this.init()
+        this.init()
         this._server = this._app.listen(this._app.get("port"), () => {
             if(this._debug) {
                 console.log("🚀 Server is running on port " + this._app.get("port"))
