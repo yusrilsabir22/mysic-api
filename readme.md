@@ -10,3 +10,21 @@
 
 ### Run Unit Test
 `yarn unit:test`
+
+
+### Project
+
+
+|-----------------------|      Request       |-----------|                    |-------------------|
+| Mysic App (Swift App) | -----------------> | Mysic API | -----------------> | Audio Jax Whisper |
+|-----------------------| <----------------- |-----------|\                   |-------------------|
+                               Response           |        \                           |
+                             Youtube Data         |         \ Callback to Mysic API    |
+                                                  |          \ Save to DB              |
+                                                  |           \------< Background Task |
+                                                  |                                    |
+                                                  |                                    |
+                                                  |                                    |
+                                                  V                                    V
+                                    Fetch and Extract Youtube Data           Detect and Generate Lyrics
+                                                                                 Using OpenAI Whisper
