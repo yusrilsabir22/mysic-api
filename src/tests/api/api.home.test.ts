@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { Server } from "../server";
+import { Server } from "../../server";
 
 let server: Server
 let homeContinuation: string
@@ -46,7 +46,7 @@ describe('GET /Browse home continuation', () => {
   })
 })
 
-describe('GET /Browse next', () => {
+describe('GET /Browse home next -> playlist song', () => {
   it('should return 200 & valid response if request param next is provided', (done) => {
     request(server.app)
       .get(`/api/v1/browse?next=${homeNext}`)

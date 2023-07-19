@@ -1,4 +1,4 @@
-declare global {
+export declare global {
   namespace NodeJS {
     interface ProcessEnv {
       S3_ENDPOINT_URL: string;
