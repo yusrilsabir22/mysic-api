@@ -3,8 +3,10 @@ import { Extractor } from "../extractor";
 import { fetchBrowseAPI, fetchSearchAPI } from "../utils/utils";
 import { Cache } from "../config/cache";
 import { INNERTUBE_API_KEY, INNERTUBE_CONTEXT, VISITOR_DATA, YTMUSIC_INITIAL_DATA } from "../types/api";
-import ytdl from "ytdl-core";
 
+export {HookControllers} from "./hook"
+export {PlayController} from "./play"
+export {LyricsControllers} from "./lyrics"
 
 
 export const BrowseControllersV2 = (cache: Cache) => async (req: Request, res: Response) => {
@@ -271,43 +273,4 @@ export const ExplorerController = (cache: Cache) => async (req: Request, res: Re
         } */
         res.json({ error: '' + error, msg: 'something went wrong' })
     }
-}
-
-export const PlayController = async (req: Request, res: Response) => {
-    // #swagger.tags = ['Play']
-    // #swagger.description = ''
-
-    /*  #swagger.parameters['id'] = {
-            in: 'query',
-                description: 'videoId',
-                type: 'string',
-                required: true
-        }
-    */
-
-    if (!req.query.id) {
-        /* #swagger.responses[422] = { 
-            schema: { $ref: "#/definitions/Error422Result" },
-            description: '' 
-        } */
-        res.status(422).json({ 'error': 'params required' })
-        return
-    }
-    try {
-        
-        const info = await ytdl.getInfo(req.query.id as string)
-        const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' })
-        /* #swagger.responses[200] = { 
-            schema: { $ref: "#/definitions/PlayResult" },
-            description: '' 
-        } */
-        res.json(audioFormat)
-    } catch(error) {
-        /* #swagger.responses[400] = { 
-            schema: { $ref: "#/definitions/ErrorResult" },
-            description: '' 
-        } */
-        res.json({ error: '' + error, msg: 'something went wrong' })
-    }
-    
 }

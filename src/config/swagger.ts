@@ -2,7 +2,7 @@ import swaggerAutogen from "swagger-autogen"
 import path from "path"
 
 const outputFile = path.join(__dirname, "..", "..", "docs", "swagger_output.json")
-const endpointsFiles = [path.join(__dirname, "..", "index.ts")]
+const endpointsFiles = [path.join(__dirname, "..", "server.ts")]
 
 const doc = {
     info: {
@@ -379,5 +379,5 @@ Object.assign(doc.definitions, {BrowseContinuationResult: doc.definitions.HomeRe
 
 // @ts-ignore: Unreachable code error
 swaggerAutogen(outputFile, endpointsFiles, doc).then(async () => {
-    await import("../index")
+    await import("../routes")
 })

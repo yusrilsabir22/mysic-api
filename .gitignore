@@ -11,3 +11,5 @@ node_modules/*
 error
 /error/*
 /docker/.data
+/.vscode
+/.vscode/

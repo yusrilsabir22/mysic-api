@@ -12,6 +12,7 @@ declare global {
       POSTGRES_URL: string;
       POSTGRES_HOST: string;
       POSTGRES_PORT: string;
+      AUDIO_JAX_WHISPER_URL: string;
     }
   }
 }

@@ -34,7 +34,184 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/api/v1/home": {
+      "get": {
+        "tags": [
+          "Home"
+        ],
+        "description": "To fetch more content home, you should take HomeResult.continuation to Browse endpoint as ct query",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HomeResult"
+            }
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResult"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/browse": {
+      "get": {
+        "tags": [
+          "Browse"
+        ],
+        "description": "Note: query next & ct can't be provided at the same request",
+        "parameters": [
+          {
+            "name": "next",
+            "in": "query",
+            "description": "will redirect to playlist",
+            "type": "string"
+          },
+          {
+            "name": "ct",
+            "in": "query",
+            "description": "will continue the playlist",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BrowseContinuationResult"
+            }
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResult"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "description": "Note: Query 'q' should be provided for every search request",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "song or band name",
+            "type": "string"
+          },
+          {
+            "name": "next",
+            "in": "query",
+            "description": "will redirect to playlist",
+            "type": "string"
+          },
+          {
+            "name": "ct",
+            "in": "query",
+            "description": "will continue fetch search",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SearchDefaultResult"
+            }
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResult"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/explorer": {
+      "get": {
+        "tags": [
+          "Explorer"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "params",
+            "in": "query",
+            "description": "will redirect to detail playlist",
+            "type": "string"
+          },
+          {
+            "name": "next",
+            "in": "query",
+            "description": "will redirect to playlist",
+            "type": "string"
+          },
+          {
+            "name": "ct",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "lazy",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ExplorerDefaultResult"
+            }
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResult"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/play/{id}": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/hook": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/lyrics": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
   "definitions": {
     "HomeResult": {
       "type": "object",

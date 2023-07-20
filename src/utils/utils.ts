@@ -1,3 +1,4 @@
+import internal, { PassThrough } from "stream";
 import { Cache } from "../config/cache";
 import { BaseElementExtractor } from "../extractor/base";
 import { INNERTUBE_API_KEY, INNERTUBE_CONTEXT, VISITOR_DATA } from "../types/api";
@@ -235,4 +236,13 @@ export const fetchSearchAPI = async (cache: Cache, query: any) => {
         }
     );
     return data
+}
+
+export function streamToBuffer(stream: PassThrough | internal.Writable) {
+  const chunks: Buffer[] = []
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)))
+    stream.on('error', (err: any) => reject(err))
+    stream.on('end', () => resolve(Buffer.concat(chunks)))
+  })
 }
